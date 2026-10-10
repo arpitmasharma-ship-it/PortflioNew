@@ -3,7 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
-import { env, isProduction } from './config/env.js';
+import { env, isProduction, isAllowedOrigin } from './config/env.js';
 import { apiLimiter } from './middleware/rateLimits.js';
 import { requireTrustedOrigin } from './middleware/csrf.js';
 import { errorHandler, notFound } from './middleware/errorHandler.js';
@@ -23,7 +23,7 @@ export function createApp() {
   app.use(
     cors({
       origin(origin, callback) {
-        if (!origin || env.corsOrigins.includes(origin)) {
+        if (isAllowedOrigin(origin)) {
           return callback(null, true);
         }
         return callback(new Error('Not allowed by CORS'));

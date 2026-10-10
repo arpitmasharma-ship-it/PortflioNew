@@ -48,3 +48,11 @@ export function assertEnv() {
 }
 
 export const isProduction = env.nodeEnv === 'production';
+
+export function isAllowedOrigin(origin) {
+  if (!origin) return true;
+  if (env.corsOrigins.includes(origin) || env.clientUrl === origin) return true;
+  if (/^http:\/\/localhost(:\d+)?$/.test(origin) || /^http:\/\/127\.0\.0\.1(:\d+)?$/.test(origin)) return true;
+  if (/^https:\/\/[a-z0-9-]+(\.[a-z0-9-]+)*\.vercel\.app$/i.test(origin)) return true;
+  return false;
+}

@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import { env, isProduction } from '../config/env.js';
+import { env, isProduction, isAllowedOrigin } from '../config/env.js';
 import { ApiError } from '../utils/ApiError.js';
 
 const CSRF_COOKIE = 'portfolio_csrf';
@@ -30,7 +30,7 @@ export function requireTrustedOrigin(req, res, next) {
   if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) return next();
   const origin = req.get('origin');
   if (!origin) return next();
-  if (!env.corsOrigins.includes(origin)) {
+  if (!isAllowedOrigin(origin)) {
     return next(new ApiError(403, 'Untrusted origin'));
   }
   return next();

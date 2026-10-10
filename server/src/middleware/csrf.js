@@ -18,12 +18,16 @@ export function setCsrfCookie(res) {
 
 export function requireCsrf(req, res, next) {
   if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) return next();
+  const origin = req.get('origin');
+  if (origin && isAllowedOrigin(origin)) {
+    return next();
+  }
   const header = req.get('x-csrf-token');
   const cookie = req.cookies?.[CSRF_COOKIE];
-  if (!header || !cookie || header !== cookie) {
-    return next(new ApiError(403, 'Invalid CSRF token'));
+  if (header && cookie && header === cookie) {
+    return next();
   }
-  return next();
+  return next(new ApiError(403, 'Invalid CSRF token or untrusted origin'));
 }
 
 export function requireTrustedOrigin(req, res, next) {
@@ -31,7 +35,7 @@ export function requireTrustedOrigin(req, res, next) {
   const origin = req.get('origin');
   if (!origin) return next();
   if (!isAllowedOrigin(origin)) {
-    return next(new ApiError(403, 'Untrusted origin'));
+    return next(new ApiError(403, `Untrusted origin: ${origin}`));
   }
   return next();
 }

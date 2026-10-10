@@ -39,6 +39,10 @@ export function createApp() {
   app.use('/api', apiLimiter);
   app.use('/api', requireTrustedOrigin);
 
+  app.get('/', (req, res) => {
+    res.json({ success: true, message: 'Portfolio API is online and healthy', health: '/health' });
+  });
+
   app.get('/health', (req, res) => {
     res.json({ success: true, message: 'ok', data: { uptime: process.uptime() } });
   });

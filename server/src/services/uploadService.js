@@ -74,7 +74,8 @@ export async function uploadImageBuffer(buffer, folder = 'portfolio', options = 
       (error, result) => {
         if (error) {
           const detail = error.error?.message || error.message || 'Image upload to Cloudinary failed.';
-          return reject(new ApiError(500, detail));
+          const statusCode = error.http_code || 400;
+          return reject(new ApiError(statusCode, detail));
         }
         resolve({
           url: result.secure_url || result.url,
@@ -104,6 +105,7 @@ export async function deleteCloudinaryAsset(publicId, resourceType = 'image') {
     });
     return result;
   } catch (error) {
-    throw new ApiError(500, error.message || 'Failed to delete asset from Cloudinary');
+    const statusCode = error.http_code || 400;
+    throw new ApiError(statusCode, error.error?.message || error.message || 'Failed to delete asset from Cloudinary');
   }
 }

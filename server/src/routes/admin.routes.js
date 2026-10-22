@@ -9,8 +9,13 @@ import { BlogPost } from '../models/BlogPost.js';
 import { createCrudController } from '../controllers/crudController.js';
 import { getStats, updateProfile } from '../controllers/profileController.js';
 import { deleteMessage, listMessages, markRead } from '../controllers/contactController.js';
-import { uploadFile } from '../controllers/uploadController.js';
-import { uploadSingle } from '../middleware/upload.js';
+import {
+  uploadFile,
+  uploadMultipleFiles,
+  deleteFile,
+  getUploadStatus,
+} from '../controllers/uploadController.js';
+import { uploadSingle, uploadMultiple } from '../middleware/upload.js';
 import { validate } from '../middleware/validate.js';
 import {
   achievementSchema,
@@ -44,7 +49,11 @@ export const adminRouter = Router();
 
 adminRouter.get('/stats', getStats);
 adminRouter.patch('/profile', validate(profileSchema.partial()), updateProfile);
+
+adminRouter.get('/upload/status', getUploadStatus);
 adminRouter.post('/upload', uploadSingle, uploadFile);
+adminRouter.post('/upload/multiple', uploadMultiple, uploadMultipleFiles);
+adminRouter.post('/upload/delete', deleteFile);
 
 resource(adminRouter, '/skills', skills, skillSchema);
 resource(adminRouter, '/projects', projects, projectSchema);

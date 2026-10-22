@@ -8,7 +8,8 @@
     "start": "node src/server.js",
     "seed": "node src/utils/seed.js",
     "reset-admin": "node src/utils/resetAdmin.js",
-    "test": "node --test src/app.test.js"
+    "test": "node --test src/app.test.js",
+    "test:cloudinary": "node src/utils/testCloudinary.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",

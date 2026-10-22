@@ -80,14 +80,20 @@ Open `/login`. If no admin exists, the form creates one (password min 10 charact
 
 | Concern | Env vars |
 |---|---|
-| Cloudinary uploads | `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` |
+| Cloudinary uploads | `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` (or `CLOUDINARY_URL`) |
 | Email on contact | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM`, `CONTACT_NOTIFY_EMAIL` |
 
-Without Cloudinary, you can still paste image/resume URLs in admin. Without SMTP, messages are stored but not emailed.
+Test your Cloudinary credentials anytime:
+```bash
+cd server
+npm run test:cloudinary
+```
+
+Without Cloudinary, you can still paste image/resume URLs manually in the admin studio. Without SMTP, messages are stored in MongoDB but not emailed.
 
 ## Scripts
 
-**Server:** `npm run dev` · `npm start` · `npm run seed` · `npm test`  
+**Server:** `npm run dev` · `npm start` · `npm run seed` · `npm test` · `npm run test:cloudinary`  
 **Client:** `npm run dev` · `npm run build` · `npm run preview` · `npm test`
 
 ## Deployment
@@ -102,7 +108,7 @@ Without Cloudinary, you can still paste image/resume URLs in admin. Without SMTP
 
 - **CORS / not logged in after login:** `CORS_ORIGINS` must include the exact frontend origin, including `https://`.
 - **CSRF 403:** the browser must send cookies; do not drop `withCredentials`.
-- **Uploads fail:** Cloudinary vars missing or file larger than 5MB / wrong type.
+- **Uploads fail:** Cloudinary vars missing or file larger than 10MB / wrong type. Run `npm run test:cloudinary` in `server` to diagnose.
 - **Seed does nothing visible for social links:** seeded GitHub/LinkedIn rows are `visible: false` until you replace placeholder URLs.
 
 ## Content model

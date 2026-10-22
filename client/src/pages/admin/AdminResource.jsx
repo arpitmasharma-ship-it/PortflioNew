@@ -3,6 +3,7 @@ import { api, getErrorMessage } from '../../services/api.js';
 import { usePortfolio } from '../../context/PortfolioContext.jsx';
 import { Button } from '../../components/common/Button.jsx';
 import { UploadField } from '../../components/admin/UploadField.jsx';
+import { MultiUploadField } from '../../components/admin/MultiUploadField.jsx';
 
 function parseList(value) {
   return String(value || '')
@@ -35,6 +36,7 @@ export function AdminResource({ title, path, fields, defaults }) {
     const payload = { ...form };
     fields.forEach((field) => {
       if (field.type === 'list') payload[field.key] = parseList(form[field.key]);
+      if (field.type === 'multiupload') payload[field.key] = Array.isArray(form[field.key]) ? form[field.key] : parseList(form[field.key]);
       if (field.type === 'checkbox') payload[field.key] = Boolean(form[field.key]);
       if (field.type === 'number') payload[field.key] = Number(form[field.key] || 0);
     });
@@ -68,6 +70,7 @@ export function AdminResource({ title, path, fields, defaults }) {
     const next = { ...defaults };
     fields.forEach((field) => {
       if (field.type === 'list') next[field.key] = (item[field.key] || []).join('\n');
+      else if (field.type === 'multiupload') next[field.key] = Array.isArray(item[field.key]) ? item[field.key] : [];
       else next[field.key] = item[field.key] ?? defaults[field.key];
     });
     setForm(next);
@@ -120,19 +123,19 @@ export function AdminResource({ title, path, fields, defaults }) {
                 </select>
               </>
             ) : field.type === 'upload' ? (
-              <>
-                <UploadField
-                  label={field.label}
-                  value={form[field.key]}
-                  onUploaded={(url) => update(field.key, url)}
-                />
-                <input
-                  className="mt-1 w-full rounded-xl border border-line px-3 py-2 text-sm"
-                  value={form[field.key] || ''}
-                  onChange={(e) => update(field.key, e.target.value)}
-                  placeholder="Or paste a URL"
-                />
-              </>
+              <UploadField
+                label={field.label}
+                value={form[field.key] || ''}
+                folder={field.folder || 'portfolio'}
+                onUploaded={(url) => update(field.key, url)}
+              />
+            ) : field.type === 'multiupload' ? (
+              <MultiUploadField
+                label={field.label}
+                values={form[field.key] || []}
+                folder={field.folder || 'portfolio/gallery'}
+                onChange={(urls) => update(field.key, urls)}
+              />
             ) : (
               <>
                 <label className="text-sm">{field.label}</label>

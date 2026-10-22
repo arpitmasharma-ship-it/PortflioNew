@@ -136,19 +136,18 @@ export default function AdminProfile() {
               <UploadField
                 label="Profile Avatar"
                 value={profileImage}
-                onUploaded={(url) => setValue('profileImage', url)}
+                folder="portfolio/avatar"
+                onUploaded={(url) => setValue('profileImage', url, { shouldDirty: true })}
               />
-              <input type="hidden" {...register('profileImage')} />
-              {renderField('profileImage', 'Or Image URL', { placeholder: 'https://...' })}
             </div>
             <div>
               <UploadField
                 label="Resume Document (PDF)"
                 value={resumeUrl}
-                onUploaded={(url) => setValue('resumeUrl', url)}
+                folder="portfolio/resume"
+                accept="application/pdf,image/*"
+                onUploaded={(url) => setValue('resumeUrl', url, { shouldDirty: true })}
               />
-              <input type="hidden" {...register('resumeUrl')} />
-              {renderField('resumeUrl', 'Or Resume URL', { placeholder: 'https://...' })}
             </div>
           </div>
         </section>

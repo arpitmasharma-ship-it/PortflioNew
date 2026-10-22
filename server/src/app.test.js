@@ -24,4 +24,15 @@ describe('health and public API shape', () => {
     assert.equal(res.status, 401);
     assert.equal(body.success, false);
   });
+
+  it('rejects unauthenticated upload routes', async () => {
+    const app = createApp();
+    const server = app.listen(0);
+    const { port } = server.address();
+    const resStatus = await fetch(`http://127.0.0.1:${port}/api/admin/upload/status`);
+    const resUpload = await fetch(`http://127.0.0.1:${port}/api/admin/upload`, { method: 'POST' });
+    server.close();
+    assert.equal(resStatus.status, 401);
+    assert.equal(resUpload.status, 401);
+  });
 });

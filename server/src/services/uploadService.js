@@ -22,8 +22,8 @@ export function isCloudinaryConfigured() {
 export function ensureCloudinary() {
   if (!isCloudinaryConfigured()) {
     throw new ApiError(
-      500,
-      'Cloudinary is not configured. Please add CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET (or CLOUDINARY_URL) to server/.env'
+      400,
+      'Cloudinary is not configured on the server. Please add CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET to your environment variables (e.g. Render Dashboard).'
     );
   }
 

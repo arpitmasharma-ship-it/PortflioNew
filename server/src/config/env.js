@@ -28,6 +28,7 @@ export const env = {
     apiKey: process.env.CLOUDINARY_API_KEY || '',
     apiSecret: process.env.CLOUDINARY_API_SECRET || '',
     url: process.env.CLOUDINARY_URL || '',
+    uploadPreset: process.env.CLOUDINARY_UPLOAD_PRESET || '',
   },
   smtp: {
     host: process.env.SMTP_HOST || '',

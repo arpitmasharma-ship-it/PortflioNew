@@ -65,12 +65,16 @@ export async function pingCloudinary() {
 export async function uploadImageBuffer(buffer, folder = 'portfolio', options = {}) {
   ensureCloudinary();
   return new Promise((resolve, reject) => {
+    const uploadOptions = {
+      folder,
+      resource_type: options.resourceType || 'auto',
+      ...options,
+    };
+    if (env.cloudinary.uploadPreset) {
+      uploadOptions.upload_preset = env.cloudinary.uploadPreset;
+    }
     const stream = cloudinary.uploader.upload_stream(
-      {
-        folder,
-        resource_type: options.resourceType || 'auto',
-        ...options,
-      },
+      uploadOptions,
       (error, result) => {
         if (error) {
           const detail = error.error?.message || error.message || 'Image upload to Cloudinary failed.';

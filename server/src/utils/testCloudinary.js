@@ -53,7 +53,18 @@ async function main() {
     process.exit(0);
   } catch (err) {
     console.error('\n❌ Cloudinary error:', err.message);
-    console.error('\nPlease double check your credentials in server/.env\n');
+    if (err.statusCode === 403 || String(err.message).includes('403') || String(err.message).includes('permission')) {
+      console.log('\n--- ⚠️ How to fix 403 Forbidden / Missing Permissions ---');
+      console.log('Your credentials connected successfully, but this API Key does not have "create" (upload) permissions.');
+      console.log('\nSteps to resolve:');
+      console.log('1. Log in to your Cloudinary Console: https://cloudinary.com/console');
+      console.log('2. Check your Dashboard or Settings (gear icon) > API Keys.');
+      console.log('3. Option A (Recommended): Copy your Primary / Master API Key & Secret and paste them into server/.env');
+      console.log('   Option B: Edit this specific API Key (942361835636194) and assign it a Role with "Create" / "Upload" permissions.');
+      console.log('4. Ensure your account email has been verified if it is a new account.\n');
+    } else {
+      console.error('\nPlease double check your credentials in server/.env\n');
+    }
     process.exit(1);
   }
 }

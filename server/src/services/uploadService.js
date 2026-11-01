@@ -77,8 +77,13 @@ export async function uploadImageBuffer(buffer, folder = 'portfolio', options = 
       uploadOptions,
       (error, result) => {
         if (error) {
-          const detail = error.error?.message || error.message || 'Image upload to Cloudinary failed.';
+          let detail = error.error?.message || error.message || 'Image upload to Cloudinary failed.';
           const statusCode = error.http_code || 400;
+          if (statusCode === 403 || String(detail).includes('403')) {
+            detail =
+              'Cloudinary rejected upload (403 Forbidden). Your API Key is missing "create" (upload) permissions. ' +
+              'Please use your Primary/Master API Key from your Cloudinary Dashboard or grant upload permissions in Settings > API Keys.';
+          }
           return reject(new ApiError(statusCode, detail));
         }
         resolve({

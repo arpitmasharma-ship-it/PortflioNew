@@ -61,25 +61,29 @@ export function AdminLayout() {
           {cloudinaryStatus ? (
             <div
               className={`flex items-center gap-2 rounded-xl p-2 text-xs border ${
-                cloudinaryStatus.configured
+                cloudinaryStatus.configured && cloudinaryStatus.connected
                   ? 'border-emerald-500/20 bg-emerald-500/5 text-emerald-800'
                   : 'border-amber-500/20 bg-amber-500/5 text-amber-800'
               }`}
               title={
-                cloudinaryStatus.configured
+                cloudinaryStatus.configured && cloudinaryStatus.connected
                   ? `Cloudinary active (${cloudinaryStatus.cloudName || 'configured'})`
-                  : 'Cloudinary not configured. Set credentials in server/.env'
+                  : cloudinaryStatus.error || 'Cloudinary not configured or connected. Check server/.env'
               }
             >
               <Cloud size={14} className="shrink-0" />
               <div className="min-w-0 flex-1 truncate">
                 <span className="font-medium">
-                  {cloudinaryStatus.configured ? 'Cloudinary ready' : 'Cloudinary setup'}
+                  {cloudinaryStatus.configured && cloudinaryStatus.connected
+                    ? 'Cloudinary ready'
+                    : cloudinaryStatus.configured
+                    ? 'Cloudinary issue'
+                    : 'Cloudinary setup'}
                 </span>
               </div>
               <span
                 className={`h-2 w-2 shrink-0 rounded-full ${
-                  cloudinaryStatus.configured ? 'bg-emerald-500' : 'bg-amber-400'
+                  cloudinaryStatus.configured && cloudinaryStatus.connected ? 'bg-emerald-500' : 'bg-amber-400'
                 }`}
               />
             </div>
